@@ -1,9 +1,14 @@
 <?php
+session_start();
 
 $mysqli = new mysqli("127.0.0.1", "root", "", "crud", 3308);
 if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 }
+
+$update=false;
+$name='';
+$location='';
 
 
 if (isset($_POST['save'])){
@@ -28,4 +33,18 @@ if(isset($_GET['delete'])){
     $_SESSION['msg_type']="danger";
 
     header("location index.php");
+}
+
+if(isset($_GET['edit'])){
+    $id=$_GET['edit'];
+   $result= $mysqli->query("SELECT * FROM data WHERE id=$id")or die($mysqli->error);
+    
+
+    if(count ($result)==1){
+        $row=$result->fetch_array();
+        $name=$row['name'];
+        $location=$row['location'];
+        $update=true;
+    }
+   
 }
